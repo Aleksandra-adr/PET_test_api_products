@@ -28,7 +28,22 @@ class ApiClient:
     def delete(self, path, **kwargs):
         return self.session.delete(self.base_url + path, **kwargs)
 
+@pytest.fixture
+def auth_token(api_client):
+    """Получает токен"""
+    login_data = {
+        "username": "admin",
+        "password": "admin123"
+    }
+    response = api_client.post("/auth/login", json=login_data)
+    assert response.status_code == 200, f"Ожидали статус код 200, получили {response.status_code}"
+    data = response.json()
+    return data['access_token']
 
+@pytest.fixture
+def auth_headers(auth_token):
+    headers = {"Authorization": f"Bearer {auth_token}"}
+    return headers
 
 
 
