@@ -45,6 +45,13 @@ def auth_headers(auth_token):
     headers = {"Authorization": f"Bearer {auth_token}"}
     return headers
 
+@pytest.fixture
+def cleanup_products(api_client, auth_headers):
+    ids = []
+    yield ids
+
+    for id in ids:
+        api_client.delete(f"/products/{id}", headers=auth_headers)
 
 
 
