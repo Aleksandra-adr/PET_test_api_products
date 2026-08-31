@@ -54,6 +54,28 @@ def cleanup_products(api_client, auth_headers):
         api_client.delete(f"/products/{id}", headers=auth_headers)
 
 
+@pytest.fixture
+def seed_products(api_client, auth_headers):
+    """Создает товар"""
+    products1 = {
+        "name": "яблоко",
+        "price": 2,
+        "description": ""
+    }
+    products2 = {
+        "name": "банан",
+        "price": 15,
+        "description": ""
+    }
+    products3 = {
+        "name": "чебурек",
+        "price": 56,
+        "description": ""
+    }
+    products_to_create = [products1, products2, products3]
+    create = []
+
+
 
 
 
