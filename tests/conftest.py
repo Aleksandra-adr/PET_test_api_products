@@ -74,6 +74,13 @@ def seed_products(api_client, auth_headers):
     }
     products_to_create = [products1, products2, products3]
     create = []
+    for i in products_to_create:
+        response = api_client.post(f"/products", json=i, headers=auth_headers)
+        create.append(response.json())
+    yield create
+    for i in create:
+        api_client.delete(f"/products/{i['id']}", headers=auth_headers)
+
 
 
 

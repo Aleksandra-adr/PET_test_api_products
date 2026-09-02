@@ -55,3 +55,11 @@ def test_protected_endpoint_with_garbage_token(api_client):
     assert response.json()["code"] == "UNAUTHORIZED"
 
 
+def test_sort_products_by_price_asc(api_client, seed_products):
+    response = api_client.get("/products", params={"sort": "price_asc"})
+    data = response.json()
+    seed = {i["id"] for i in seed_products}
+    filter_data = [i for i in data if i["id"] in seed]
+    finish = [i["price"] for i in filter_data]
+    assert finish == [2, 15, 56], f"Ожидали сортировку по возростанию , получили {filter_data}"
+
