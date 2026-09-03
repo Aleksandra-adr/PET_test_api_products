@@ -63,3 +63,17 @@ def test_sort_products_by_price_asc(api_client, seed_products):
     finish = [i["price"] for i in filter_data]
     assert finish == [2, 15, 56], f"Ожидали сортировку по возростанию , получили {filter_data}"
 
+@pytest.mark.parametrize("sort_value, field, expected", [
+                             ("price_asc", "price", [2, 15, 56]),
+                              ("price_desc", "price", [56, 15, 2]),
+                             ("name_asc", "name", ["банан", "чебурек", "яблоко"]),
+                             ("name_desc", "name", ["яблоко", "чебурек", "банан"])])
+def test_sort_products(api_client, seed_products, sort_value, field, expected):
+    response = api_client.get("/products", params={"sort": sort_value})
+    data = response.json()
+    seed = {i["id"] for i in seed_products}
+    filter_data = [i for i in data if i["id"] in seed]
+    finish = [i[field] for i in filter_data]
+    assert finish == expected
+
+
