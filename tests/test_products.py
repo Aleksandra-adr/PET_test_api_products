@@ -76,4 +76,15 @@ def test_sort_products(api_client, seed_products, sort_value, field, expected):
     finish = [i[field] for i in filter_data]
     assert finish == expected
 
+@pytest.mark.parametrize("params, expected_name", [
+    ({"min_price": 14}, ["банан", "чебурек"]),
+    ({"max_price": 5}, ["яблоко"]),
+    ({"min_price": 0, "max_price":100}, ["яблоко", "банан", "чебурек"])])
+def test_sort_price(api_client, seed_products, params, expected_name):
+    response = api_client.get("/products", params=params)
+    data = response.json()
+    seed = {i["id"] for i in seed_products}
+    filter_data = [i for  i in data if i["id"] in seed]
+    finish = [i["name"] for i in filter_data]
+    assert finish == expected_name
 
